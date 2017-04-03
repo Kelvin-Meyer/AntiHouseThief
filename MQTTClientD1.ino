@@ -1,10 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-#define DHTTYPE DHT11
-#define DHTPIN  2
-#define SLEEP_DELAY_IN_SECONDS  30
-
 unsigned long previousMillis = 0; 
 const long interval = 2000; 
 
