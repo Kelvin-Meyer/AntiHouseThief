@@ -8,6 +8,8 @@
 unsigned long previousMillis = 0; 
 const long interval = 2000; 
 
+int triggerSensitivity = 0;
+
 const char* ssid = "Your SSID";
 const char* password = "Your SSID password";
 const char* mqtt_server = "Your MQTT Server name";
@@ -88,7 +90,7 @@ void reconnect() {
  * After doing this it will sleep for 3 seconds.
  */
 void loop() {
-  if (measureMovement() > 0) {
+  if (measureMovement() > triggerSensitivity) {
     if (!client.connected()) {
       reconnect();
     }
