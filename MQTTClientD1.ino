@@ -7,16 +7,18 @@
 
 unsigned long previousMillis = 0; 
 const long interval = 2000; 
-//const char* ssid = "Syntaxis";
-//const char* password = "syntaxiswifi!";
-const char* ssid = "iPhone van Casper";
-const char* password = "sterkwachtwoord1";
-//const char* ssid = "pudding";
-//const char* password = "lekkerpuddingeten";
-const char* mqtt_server = "172.20.10.4";
-const char* mqtt_username = "testje";
-const char* mqtt_password = "testje";
-const char* mqtt_topic = "nieuws";
+
+const char* ssid = "Your SSID";
+const char* password = "Your SSID password";
+const char* mqtt_server = "Your MQTT Server name";
+const char* mqtt_username = "Your MQTT username";
+const char* mqtt_password = "Your MQTT password";
+const char* mqtt_topic = "Your publish topic";
+const int* mqtt_port = 1883; // Standard port for MQTT
+const char* client_id = "Your client id";
+
+String dataString = String("Your message");
+char charBuf[100];
 
 int tiltSensorPin = D1;
 int periodLength = 1000; // Milliseconds per period
@@ -24,22 +26,18 @@ int periodLength = 1000; // Milliseconds per period
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-String dataString;
-char charBuf[100];
-
 void setup() {
+  // Baudrate
   Serial.begin(115200);
 
   // setup WiFi
   setup_wifi();
-  client.setServer(mqtt_server, 1883);
+  client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
-
 }
 
 void setup_wifi() {
   delay(10);
-  Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
 
@@ -50,7 +48,6 @@ void setup_wifi() {
     Serial.print(".");
   }
 
-  Serial.println("");
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
@@ -67,8 +64,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void reconnect() {
-  //WiFi.begin(ssid, password);
-
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -76,7 +71,7 @@ void reconnect() {
   }
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
-    if (client.connect("test con", mqtt_username, mqtt_password)) {
+    if (client.connect(client_id, mqtt_username, mqtt_password)) {
       Serial.println("connected");
     } else {
       Serial.print("MQTT connection failed, retry count: ");
@@ -87,14 +82,17 @@ void reconnect() {
   }
 }
 
-
+/*
+ * If measureMovement() returns more than zero. 
+ * Connect to the Wi-Fi network, connect to MQTT Server and send a message.
+ * After doing this it will sleep for 3 seconds.
+ */
 void loop() {
   if (measureMovement() > 0) {
     if (!client.connected()) {
       reconnect();
     }
     client.loop();
-    dataString = String("Er is beweging gedecteerd");
     dataString.toCharArray(charBuf, 150);
     Serial.println(charBuf);
     client.publish(mqtt_topic, charBuf );
@@ -102,7 +100,7 @@ void loop() {
     client.disconnect();
     Serial.println( "Closing WiFi connection...");
     WiFi.disconnect();
-    Serial.println( "Sleeping for a minute");
+    Serial.println( "Sleeping for three seconds");
     delay(3000); 
   }
 }
@@ -129,5 +127,4 @@ int measureMovement() {
   } while ((currentTime - startTime) < periodLength);
 
   return timesTriggered; // return the results
-  
 }
