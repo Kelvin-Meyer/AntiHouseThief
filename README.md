@@ -3,10 +3,6 @@
 Protect your house with this Arduino and Raspberry PI setup!
 
 ## Installation on Raspberry PI
-Get ip of Raspberry pi
-```
-ifconfig
-```
 
 Install mosquitto
 ```
