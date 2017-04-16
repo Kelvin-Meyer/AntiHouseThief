@@ -56,8 +56,10 @@ Approved by us:
 
 
 ## Sources
+http://mosquitto.org/
 http://www.switchdoc.com/2016/02/tutorial-installing-and-testing-mosquitto-mqtt-on-raspberry-pi/
 http://www.waveshare.com/wiki/3.5inch_RPi_LCD_(A)
+
 
 
 
