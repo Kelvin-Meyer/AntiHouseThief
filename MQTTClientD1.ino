@@ -12,7 +12,7 @@ const char* mqtt_server = "Your MQTT Server name";
 const char* mqtt_username = "Your MQTT username";
 const char* mqtt_password = "Your MQTT password";
 const char* mqtt_topic = "Your publish topic";
-const int* mqtt_port = 1883; // Standard port for MQTT
+int mqtt_port = 1883; // Standard port for MQTT
 const char* client_id = "Your client id";
 
 String dataString = String("Your message");
